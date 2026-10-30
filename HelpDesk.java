@@ -31,7 +31,6 @@ public class HelpDesk {
         return requestsById.get(id);
     }
 
-    // Assign a request to a technician
     public void assignRequest(Technician technician, int requestId) {
         if (technician == null) {
             throw new IllegalArgumentException("Technician cannot be null");
@@ -47,7 +46,6 @@ public class HelpDesk {
             throw new IllegalStateException("Cannot assign a resolved request");
         }
 
-        // Each request can only be assigned to one technician
         for (List<SupportRequest> assigned : assignments.values()) {
             if (assigned.contains(request)) {
                 throw new IllegalStateException("Request is already assigned");
@@ -60,4 +58,52 @@ public class HelpDesk {
 
         assignments.get(technician).add(request);
     }
+
+    public int resolveRequest(Technician technician, int requestId) {
+        if (technician == null) {
+            throw new IllegalArgumentException("Technician cannot be null");
+        }
+
+        List<SupportRequest> assigned = assignments.get(technician);
+
+        if (assigned == null) {
+            throw new IllegalStateException("Technician has no assigned requests");
+        }
+
+        for (SupportRequest request : assigned) {
+            if (request.getId() == requestId) {
+                return request.resolveFor(technician);
+            }
+        }
+
+        throw new IllegalStateException("Request is not assigned to this technician");
+    }
+
+    public void printAllRequests() {
+        System.out.println("All Support Requests:");
+
+        for (SupportRequest request : requestsById.values()) {
+            System.out.println(request);
+        }
+    }
+
+    public void printAssignmentsFor(Technician technician) {
+        if (technician == null) {
+            throw new IllegalArgumentException("Technician cannot be null");
+        }
+
+        System.out.println("Assignments for " + technician + ":");
+
+        List<SupportRequest> assigned = assignments.get(technician);
+
+        if (assigned == null || assigned.isEmpty()) {
+            System.out.println("No assigned requests");
+            return;
+        }
+
+        for (SupportRequest request : assigned) {
+            System.out.println(request);
+        }
+    }
 }
+
