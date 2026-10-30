@@ -3,9 +3,9 @@ package Proj;
 // Shared data and behavior for all request types
 public abstract class AbstractSupportRequest implements SupportRequest {
 
-	private int id;
-	private String title;
-	private int basePoints;
+	private final int id;
+	private final String title;
+	private final int basePoints;
 	private boolean resolved;
 
 	// Validate and set fields
