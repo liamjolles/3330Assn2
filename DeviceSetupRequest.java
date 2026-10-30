@@ -3,7 +3,7 @@ package Proj;
 // Setup of one or more devices
 public class DeviceSetupRequest extends AbstractSupportRequest {
 
-	private int deviceCount;
+	private final int deviceCount;
 
 	// Validate deviceCount (positive)
 	public DeviceSetupRequest(int id, String title, int basePoints, int deviceCount) {
