@@ -1,34 +1,66 @@
 package Proj;
 
-// Password or account reset
-public class PasswordResetRequest extends AbstractSupportRequest {
+// Shared data and behavior for all request types
+public abstract class AbstractSupportRequest implements SupportRequest {
 
-	private String accountName;
+	private int id;
+	private String title;
+	private int basePoints;
+	private boolean resolved;
 
-	// Validate accountName (not null or blank)
-	public PasswordResetRequest(int id, String title, int basePoints, String accountName) {
-		super(id, title, basePoints);
-		if (accountName == null || accountName.isBlank()) {
-			throw new IllegalArgumentException("accountName cannot be null or blank");
+	// Validate and set fields
+	public AbstractSupportRequest(int id, String title, int basePoints) {
+		if (id <= 0) {
+			throw new IllegalArgumentException("id must be positive");
 		}
-		this.accountName = accountName;
+		if (title == null || title.isBlank()) {
+			throw new IllegalArgumentException("title cannot be null or blank");
+		}
+		if (basePoints <= 0) {
+			throw new IllegalArgumentException("basePoints must be positive");
+		}
+		this.id = id;
+		this.title = title;
+		this.basePoints = basePoints;
+		this.resolved = false;
 	}
 
-	// Award exactly basePoints
+	// Request ID
 	@Override
-	public int resolveFor(Technician technician) {
-		if (technician == null) {
-			throw new IllegalArgumentException("technician cannot be null");
-		}
-		markResolved();
-		int points = getBasePoints();
-		technician.addPoints(points);
-		return points;
+	public int getId() {
+		return id;
 	}
 
-	// Request info plus account name
+	// Request title
+	@Override
+	public String getTitle() {
+		return title;
+	}
+
+	// Base points
+	@Override
+	public int getBasePoints() {
+		return basePoints;
+	}
+
+	// Resolved or not
+	@Override
+	public boolean isResolved() {
+		return resolved;
+	}
+
+	// Mark resolved
+	// Design choice: resolve only once, second attempt throws IllegalStateException
+	protected void markResolved() {
+		if (resolved) {
+			throw new IllegalStateException("Request " + id + " is already resolved");
+		}
+		resolved = true;
+	}
+
+	// ID, title, base points, resolved state
 	@Override
 	public String toString() {
-		return "PasswordReset " + super.toString() + " account=" + accountName;
+		return "Request #" + id + " [" + title + ", basePoints=" + basePoints + ", resolved=" + resolved + "]";
 	}
 }
