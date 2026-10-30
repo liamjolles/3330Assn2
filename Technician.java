@@ -3,7 +3,7 @@ package Proj;
 // IT technician who earns service points
 public class Technician {
 
-	private String name;
+	private final String name;
 	private int servicePoints;
 
 	// Validate name, points start at 0
