@@ -3,7 +3,7 @@ package Proj;
 // Password or account reset
 public class PasswordResetRequest extends AbstractSupportRequest {
 
-	private String accountName;
+	private final String accountName;
 
 	// Validate accountName (not null or blank)
 	public PasswordResetRequest(int id, String title, int basePoints, String accountName) {
