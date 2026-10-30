@@ -1,4 +1,3 @@
-
 package Proj;
 
 import java.util.HashMap;
@@ -31,5 +30,34 @@ public class HelpDesk {
     public SupportRequest findRequest(int id) {
         return requestsById.get(id);
     }
-}
 
+    // Assign a request to a technician
+    public void assignRequest(Technician technician, int requestId) {
+        if (technician == null) {
+            throw new IllegalArgumentException("Technician cannot be null");
+        }
+
+        SupportRequest request = findRequest(requestId);
+
+        if (request == null) {
+            throw new IllegalArgumentException("Request does not exist");
+        }
+
+        if (request.isResolved()) {
+            throw new IllegalStateException("Cannot assign a resolved request");
+        }
+
+        // Each request can only be assigned to one technician
+        for (List<SupportRequest> assigned : assignments.values()) {
+            if (assigned.contains(request)) {
+                throw new IllegalStateException("Request is already assigned");
+            }
+        }
+
+        if (!assignments.containsKey(technician)) {
+            assignments.put(technician, new ArrayList<>());
+        }
+
+        assignments.get(technician).add(request);
+    }
+}
