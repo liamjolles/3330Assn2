@@ -13,18 +13,22 @@ public class NetworkIssueRequest extends AbstractSupportRequest {
 
         this.affectedUsers = affectedUsers;
     }
-    
+
     @Override
     public int resolveFor(Technician technician) {
-    	if(technician == null) {
-    		throw new IllegalArgumentException("Technician cannot be null");
-    		
-    	}
-    	int points = Math.addExact(getBasePoints(), Math.multiplyExact(affectedUsers, 2));
-    	
-    	technician.addPoints(points);
-    	markResolved();
-    	
-    	return points;
+        if (technician == null) {
+            throw new IllegalArgumentException("Technician cannot be null");
+        }
+
+        if (isResolved()) {
+            throw new IllegalStateException("Network issue is already resolved");
+        }
+
+        int points = Math.addExact(getBasePoints(), Math.multiplyExact(affectedUsers, 2));
+
+        technician.addPoints(points);
+        markResolved();
+
+        return points;
     }
 }
